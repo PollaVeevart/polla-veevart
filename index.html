@@ -1,207 +1,149 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Veevart Predictions</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Pronóstico Selección Colombia</title>
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
 body{
-background:linear-gradient(135deg,#0B1E3D,#123B73,#1F5FAF);
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:20px;
+  font-family: Arial, sans-serif;
+  padding:20px;
 }
 
-.card{
-width:100%;
-max-width:420px;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(18px);
-border-radius:25px;
-padding:35px;
-color:white;
-text-align:center;
-box-shadow:0 15px 35px rgba(0,0,0,.35);
-}
-
-h1{
-font-size:34px;
-margin-bottom:5px;
-}
-
-h1 span{
-color:#FFD447;
-}
-
-p{
-opacity:.9;
-margin-bottom:25px;
-}
-
-.match{
-font-size:28px;
-font-weight:bold;
-margin-bottom:25px;
-}
-
-input{
-width:100%;
-padding:15px;
-border:none;
-border-radius:12px;
-font-size:16px;
-margin-bottom:18px;
-}
-
-.score{
-display:flex;
-gap:15px;
-}
-
-.score input{
-text-align:center;
-font-size:24px;
-font-weight:bold;
+input, select, button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
 }
 
 button{
-width:100%;
-padding:16px;
-margin-top:20px;
-border:none;
-border-radius:12px;
-background:#FFD447;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-transition:.3s;
+  background:#1c8c3a;
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
 }
 
 button:hover{
-transform:scale(1.03);
+  opacity:0.8;
 }
 
 #mensaje{
-margin-top:20px;
-font-weight:bold;
+  margin-top:15px;
+  font-weight:bold;
 }
-
 </style>
+
 </head>
 
 <body>
 
-<div class="card">
+<h2>🇨🇴 Pronóstico Selección Colombia</h2>
 
-<h1>Veevart <span>Predictions</span></h1>
+<form id="formulario">
 
-<p>Pronostica el resultado del partido</p>
+<label>Nombre:</label>
+<input id="nombre" type="text" required>
 
-<div class="match">
-🇨🇴 Colombia vs 🇨🇭 Suiza
-</div>
 
-<input
-id="nombre"
-placeholder="Escribe tu nombre">
+<label>Marcador Colombia:</label>
+<input id="colombia" type="number" required>
 
-<div class="score">
 
-<input
-id="colombia"
-type="number"
-min="0"
-placeholder="COL">
+<label>Marcador Suiza:</label>
+<input id="suiza" type="number" required>
 
-<input
-id="suiza"
-type="number"
-min="0"
-placeholder="SUI">
 
-</div>
-
-<button onclick="enviarPronostico()">
-Enviar Pronóstico
+<button type="submit">
+Enviar pronóstico
 </button>
+
+</form>
+
 
 <div id="mensaje"></div>
 
-</div>
 
 <script>
 
-const URL="https://script.google.com/macros/s/AKfycbzn7iCXGjTme-2VrZd0Z_2oTzC74_Zuj7m1Sb3YWuFRtlFdSQuVmZ7oRmnppXbWQ6iP0A/exec";
+const URL = "PEGA_AQUI_TU_URL_DEL_APPS_SCRIPT";
 
-async function enviarPronostico(){
 
-const nombre=document.getElementById("nombre").value.trim();
-const colombia=document.getElementById("colombia").value;
-const suiza=document.getElementById("suiza").value;
-const mensaje=document.getElementById("mensaje");
+const formulario = document.getElementById("formulario");
+const mensaje = document.getElementById("mensaje");
 
-if(!nombre || colombia==="" || suiza===""){
-mensaje.innerHTML="⚠️ Completa todos los campos.";
-return;
-}
 
-mensaje.innerHTML="Enviando...";
+formulario.addEventListener("submit", async function(e){
 
-try {
+e.preventDefault();
 
-  const respuesta = await fetch(URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      nombre,
-      colombia,
-      suiza
-    })
-  });
 
- const resultado = await respuesta.text();
+const nombre = document.getElementById("nombre").value;
+const colombia = document.getElementById("colombia").value;
+const suiza = document.getElementById("suiza").value;
 
-console.log("Estado HTTP:", respuesta.status);
-console.log("Respuesta del servidor:", resultado);
 
-  if(resultado.status !== "ok"){
-      throw new Error(resultado.message);
-  }
+mensaje.innerHTML="⏳ Enviando...";
 
-  mensaje.innerHTML="✅ ¡Pronóstico registrado!";
 
-  document.getElementById("nombre").value="";
-  document.getElementById("colombia").value="";
-  document.getElementById("suiza").value="";
+try{
 
-} catch(e){
 
-  console.error("Error:", e);
-  mensaje.innerHTML="❌ Error al enviar: " + e.message;
+const respuesta = await fetch(URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
 
-}
+body:JSON.stringify({
+
+nombre:nombre,
+colombia:colombia,
+suiza:suiza
+
+})
+
+});
+
+
+const resultado = await respuesta.json();
+
+
+console.log(resultado);
+
+
+if(resultado.status !== "ok"){
+
+throw new Error(resultado.message);
 
 }
 
+
+mensaje.innerHTML="✅ ¡Pronóstico registrado correctamente!";
+
+
+formulario.reset();
+
+
 }
+
+catch(error){
+
+
+console.error(error);
+
+mensaje.innerHTML="❌ Error al enviar: "+error.message;
+
+
+}
+
+
+});
+
 
 </script>
+
 
 </body>
 </html>
