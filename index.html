@@ -161,36 +161,40 @@ return;
 
 mensaje.innerHTML="Enviando...";
 
-try{
+try {
 
-const respuesta = await fetch(URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    nombre,
-    colombia,
-    suiza
-  })
-});
-const resultado = await respuesta.text();
+  const respuesta = await fetch(URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      nombre,
+      colombia,
+      suiza
+    })
+  });
 
-console.log("Respuesta del servidor:", resultado);
-const resultado = await respuesta.json();
+  const resultado = await respuesta.json();
 
-if(resultado.status !== "ok"){
-    throw new Error(resultado.message);
+  console.log("Respuesta del servidor:", resultado);
+
+  if(resultado.status !== "ok"){
+      throw new Error(resultado.message);
+  }
+
+  mensaje.innerHTML="✅ ¡Pronóstico registrado!";
+
+  document.getElementById("nombre").value="";
+  document.getElementById("colombia").value="";
+  document.getElementById("suiza").value="";
+
+} catch(e){
+
+  console.error("Error:", e);
+  mensaje.innerHTML="❌ Error al enviar: " + e.message;
+
 }
-mensaje.innerHTML="✅ ¡Pronóstico registrado!";
-
-document.getElementById("nombre").value="";
-document.getElementById("colombia").value="";
-document.getElementById("suiza").value="";
-
-}catch(e){
-
-mensaje.innerHTML="❌ Error al enviar.";
 
 }
 
