@@ -174,7 +174,9 @@ const respuesta = await fetch(URL, {
     suiza
   })
 });
+const resultado = await respuesta.text();
 
+console.log("Respuesta del servidor:", resultado);
 const resultado = await respuesta.json();
 
 if(resultado.status !== "ok"){
