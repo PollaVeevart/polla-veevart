@@ -175,9 +175,10 @@ try {
     })
   });
 
-  const resultado = await respuesta.json();
+ const resultado = await respuesta.text();
 
-  console.log("Respuesta del servidor:", resultado);
+console.log("Estado HTTP:", respuesta.status);
+console.log("Respuesta del servidor:", resultado);
 
   if(resultado.status !== "ok"){
       throw new Error(resultado.message);
