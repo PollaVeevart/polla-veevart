@@ -3,44 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Polla Veevart</title>
+
+<title>Veevart Predictions</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0B1E3D,#123B73,#1F5FAF);
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-background:#111;
+min-height:100vh;
+padding:20px;
+}
+
+.card{
+width:100%;
+max-width:420px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(18px);
+border-radius:25px;
+padding:35px;
 color:white;
-font-family:Arial;
 text-align:center;
+box-shadow:0 15px 35px rgba(0,0,0,.35);
 }
 
 h1{
-font-size:55px;
-margin-bottom:10px;
+font-size:34px;
+margin-bottom:5px;
+}
+
+h1 span{
+color:#FFD447;
 }
 
 p{
-font-size:24px;
-color:#FFD400;
+opacity:.9;
+margin-bottom:25px;
 }
-</style>
 
+.match{
+font-size:28px;
+font-weight:bold;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+font-size:16px;
+margin-bottom:18px;
+}
+
+.score{
+display:flex;
+gap:15px;
+}
+
+.score input{
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+button{
+width:100%;
+padding:16px;
+margin-top:20px;
+border:none;
+border-radius:12px;
+background:#FFD447;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.03);
+}
+
+#mensaje{
+margin-top:20px;
+font-weight:bold;
+}
+
+</style>
 </head>
 
 <body>
 
-<div>
+<div class="card">
 
-<h1>🇨🇴 VEEVART FAN ZONE</h1>
+<h1>Veevart <span>Predictions</span></h1>
 
-<p>Polla Mundialista</p>
+<p>Pronostica el resultado del partido</p>
+
+<div class="match">
+🇨🇴 Colombia vs 🇨🇭 Suiza
+</div>
+
+<input
+id="nombre"
+placeholder="Escribe tu nombre">
+
+<div class="score">
+
+<input
+id="colombia"
+type="number"
+min="0"
+placeholder="COL">
+
+<input
+id="suiza"
+type="number"
+min="0"
+placeholder="SUI">
 
 </div>
 
-</body>
+<button onclick="enviarPronostico()">
+Enviar Pronóstico
+</button>
 
+<div id="mensaje"></div>
+
+</div>
+
+<script>
+
+const URL="https://script.google.com/macros/s/AKfycbzn7iCXGjTme-2VrZd0Z_2oTzC74_Zuj7m1Sb3YWuFRtlFdSQuVmZ7oRmnppXbWQ6iP0A/exec";
+
+async function enviarPronostico(){
+
+const nombre=document.getElementById("nombre").value.trim();
+const colombia=document.getElementById("colombia").value;
+const suiza=document.getElementById("suiza").value;
+const mensaje=document.getElementById("mensaje");
+
+if(!nombre || colombia==="" || suiza===""){
+mensaje.innerHTML="⚠️ Completa todos los campos.";
+return;
+}
+
+mensaje.innerHTML="Enviando...";
+
+try{
+
+await fetch(URL,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+nombre,
+colombia,
+suiza
+})
+});
+
+mensaje.innerHTML="✅ ¡Pronóstico registrado!";
+
+document.getElementById("nombre").value="";
+document.getElementById("colombia").value="";
+document.getElementById("suiza").value="";
+
+}catch(e){
+
+mensaje.innerHTML="❌ Error al enviar.";
+
+}
+
+}
+
+</script>
+
+</body>
 </html>
