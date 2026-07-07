@@ -163,18 +163,23 @@ mensaje.innerHTML="Enviando...";
 
 try{
 
-await fetch(URL,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-nombre,
-colombia,
-suiza
-})
+const respuesta = await fetch(URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    nombre,
+    colombia,
+    suiza
+  })
 });
 
+const resultado = await respuesta.json();
+
+if(resultado.status !== "ok"){
+    throw new Error(resultado.message);
+}
 mensaje.innerHTML="✅ ¡Pronóstico registrado!";
 
 document.getElementById("nombre").value="";
